@@ -1,6 +1,21 @@
-const { Menu, shell } = require('electron');
+const { Menu, shell, ipcMain, BrowserWindow } = require('electron');
 
 const template = [
+    {
+        label: 'Format',
+        submenu: [
+            {
+                label: 'Toggle Bold',
+                click() {
+                    const window = BrowserWindow.getFocusedWindow();
+                    window.webContents.send(
+                        'editor-event',
+                        'toggle-bold'
+                    );
+                }
+            }
+        ]
+    },
     {
         role: 'help',
         submenu: [
@@ -37,5 +52,9 @@ if (process.env.DEBUG) {
 }
 
 const menu = Menu.buildFromTemplate(template);
+
+ipcMain.on('editor-reply', (event, arg) => {
+    console.log(`Received reply from web page: ${arg}`);
+});
 
 module.exports = menu;
