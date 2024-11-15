@@ -1,9 +1,10 @@
-const information = document.getElementById('info')
-information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`;
+window.addEventListener('DOMContentLoaded', () => {
+  const editor = new SimpleMDE({ element: document.getElementById("editor") });
 
-const func = async () => {
-    const response = await window.versions.ping();
-    console.log(response);
-  }
-  
-  func();
+  window.api.editorEventRegister((arg) => {
+    if (arg === 'toggle-bold') {
+
+      editor.toggleBold();
+    }
+  });
+});

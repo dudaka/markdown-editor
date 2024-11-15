@@ -1,12 +1,15 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('versions', {
-  node: () => process.versions.node,
-  chrome: () => process.versions.chrome,
-  electron: () => process.versions.electron,
-  // we can also expose variables, not just functions
-  ping: async () => {
-    const result = await ipcRenderer.invoke('ping');
-    return result;
+
+contextBridge.exposeInMainWorld('api', {
+  editorEventRegister: (callback) => {
+    ipcRenderer.on('editor-event', (event, arg) => {   
+      event.sender.send('editor-reply', `Received ${arg}`); 
+      if (arg === 'toggle-bold') {
+        callback(arg);
+      }
+    });
   }
-})
+});
+
+ipcRenderer.send('editor-reply', 'Page Loaded');

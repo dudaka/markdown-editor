@@ -1,17 +1,18 @@
-const { app, BrowserWindow, ipcMain } = require('electron/main');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron/main');
 const path = require('node:path')
+const menu = require('./menu');
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1600,
+    height: 1200,
     webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
     }
   });
 
   win.loadFile('index.html');
-}
+};
 
 app.whenReady().then(() => {
   ipcMain.handle('ping', async (event, arg) => {
@@ -26,10 +27,12 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-})
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-})
+});
+
+Menu.setApplicationMenu(menu);
