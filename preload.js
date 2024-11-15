@@ -5,10 +5,11 @@ contextBridge.exposeInMainWorld('api', {
   editorEventRegister: (callback) => {
     ipcRenderer.on('editor-event', (event, arg) => {   
       event.sender.send('editor-reply', `Received ${arg}`); 
-      if (arg === 'toggle-bold') {
-        callback(arg);
-      }
+      callback(event, arg);
     });
+  },
+  sendEventToEditor: (event, arg) => {
+    ipcRenderer.send(event, arg);
   }
 });
 

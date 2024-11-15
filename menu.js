@@ -1,4 +1,4 @@
-const { Menu, shell, app, ipcMain, BrowserWindow } = require('electron');
+const { Menu, shell, app, ipcMain, BrowserWindow, globalShortcut } = require('electron');
 
 const template = [
     {
@@ -63,6 +63,19 @@ if (process.env.DEBUG) {
 
 ipcMain.on('editor-reply', (event, arg) => {
     console.log(`Received reply from web page: ${arg}`);
+});
+
+app.on('ready', () => {
+    globalShortcut.register('CommandOrControl+S', () => {
+        console.log('Saving the file');
+        const window = BrowserWindow.getFocusedWindow();
+        window.webContents.send('editor-event', 'save');
+    });
+});
+
+ipcMain.on('save', (event, arg) => {
+    console.log('Save file event received');
+    console.log(arg);
 });
 
 const menu = Menu.buildFromTemplate(template);
