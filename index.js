@@ -1,18 +1,35 @@
-const { app, BrowserWindow, Menu } = require('electron');
-const menu = require('./menu')
+const { app, BrowserWindow, ipcMain } = require('electron/main');
+const path = require('node:path')
 
-let window;
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+    }
+  });
 
-app.on('ready', () => {
-    window = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-    window.loadFile('index.html');
-});
+  win.loadFile('index.html');
+}
 
-Menu.setApplicationMenu(menu);
+app.whenReady().then(() => {
+  ipcMain.handle('ping', async (event, arg) => {
+    console.log('ping');
+    return 'pong';
+  });
+
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+})
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+})
