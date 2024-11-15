@@ -1,4 +1,12 @@
-const { Menu, shell, app, ipcMain, BrowserWindow, globalShortcut } = require('electron');
+const { 
+    Menu, 
+    app, 
+    ipcMain, 
+    BrowserWindow, 
+    globalShortcut,
+    dialog
+} = require('electron');
+const fs = require('fs');
 
 const template = [
     {
@@ -76,6 +84,24 @@ app.on('ready', () => {
 ipcMain.on('save', (event, arg) => {
     console.log('Save file event received');
     console.log(arg);
+
+    const window = BrowserWindow.getFocusedWindow();
+    const options = {
+        title: 'Save Markdown File',
+        filters: [
+            {
+                name: 'MyFile',
+                extensions: ['md']
+            }
+        ]
+    };
+
+    dialog.showSaveDialog(window, options).then((file) => {
+        if (file) {
+            filename = file.filePath;
+            fs.writeFileSync(filename, arg);
+        }
+    });
 });
 
 const menu = Menu.buildFromTemplate(template);

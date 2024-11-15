@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('api', {
   editorEventRegister: (callback) => {
     ipcRenderer.on('editor-event', (event, arg) => {   
       event.sender.send('editor-reply', `Received ${arg}`); 
-      callback(event, arg);
+      callback(arg);
     });
   },
   sendEventToEditor: (event, arg) => {
