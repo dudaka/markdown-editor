@@ -79,6 +79,33 @@ app.on('ready', () => {
         const window = BrowserWindow.getFocusedWindow();
         window.webContents.send('editor-event', 'save');
     });
+
+    globalShortcut.register('CommandOrControl+O', () => {
+        const window = BrowserWindow.getFocusedWindow();
+        // window.webContents.send('editor-event', 'toggle-bold');
+        const options = {
+            title: 'Pick a markdown file',
+            filters: [
+                {
+                    name: 'Markdown files',
+                    extensions: ['md']
+                },
+                {
+                    name: 'Text files',
+                    extensions: ['txt']
+                }
+            ]
+        };
+
+        dialog.showOpenDialog(window, options).then((file) => {      
+            if (file && file.filePaths.length > 0) {
+                filename = file.filePaths[0];
+                const content = fs.readFileSync(filename).toString();
+                window.webContents.send('load', content);
+
+            }
+        });
+    });
 });
 
 ipcMain.on('save', (event, arg) => {

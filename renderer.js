@@ -10,4 +10,8 @@ window.addEventListener('DOMContentLoaded', () => {
       window.api.sendEventToEditor('save', editor.value());
     }
   });
+
+  window.api.loadEventRegister((content) => {
+    editor.value(content);
+  });
 });

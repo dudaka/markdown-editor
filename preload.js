@@ -8,9 +8,18 @@ contextBridge.exposeInMainWorld('api', {
       callback(arg);
     });
   },
+  loadEventRegister: (callback) => {
+    ipcRenderer.on('load', (event, content) => {
+      if (content) {
+        callback(content);
+      }
+    });
+  },
   sendEventToEditor: (event, arg) => {
     ipcRenderer.send(event, arg);
-  }
+  },
 });
+
+
 
 ipcRenderer.send('editor-reply', 'Page Loaded');
