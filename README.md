@@ -84,3 +84,20 @@ Customized the Electron Menu module to include relevant menu items.
 
 - Set up using `electron-updater`.
 - Published releases hosted on GitHub.
+
+## Automatic Updates
+
+### Generate PAT
+
+[Creation Link](https://github.com/settings/tokens/new)
+
+![](pat-permissions.png)
+
+### PAT
+
+```
+
+GITHUB_TOKEN=<PAT>
+npm run publish
+
+```

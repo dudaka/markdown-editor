@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, Menu } = require('electron/main');
 const path = require('node:path')
 const menu = require('./menu');
 
+require('update-electron-app')()
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 1600,
@@ -12,6 +14,7 @@ const createWindow = () => {
   });
 
   win.loadFile('index.html');
+
 };
 
 app.whenReady().then(() => {
@@ -27,6 +30,7 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+  
 });
 
 app.on('window-all-closed', () => {
