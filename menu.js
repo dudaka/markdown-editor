@@ -8,18 +8,60 @@ const {
 } = require('electron');
 const fs = require('fs');
 
+function saveFile() {
+    console.log('Saving the file');
+    
+    const window = BrowserWindow.getFocusedWindow();
+    window.webContents.send('editor-event', 'save');
+}
+
+function loadFile() {
+    const window = BrowserWindow.getFocusedWindow();
+    const options = {
+        title: 'Pick a markdown file',
+        filters: [
+            {
+                name: 'Markdown files',
+                extensions: ['md']
+            },
+            {
+                name: 'Text files',
+                extensions: ['txt']
+            }
+        ]
+    };
+
+    dialog.showOpenDialog(window, options).then((file) => {      
+        if (file && file.filePaths.length > 0) {
+            filename = file.filePaths[0];
+            const content = fs.readFileSync(filename).toString();
+            window.webContents.send('load', content);
+
+        }
+    });
+}
+
 const template = [
     {
-        // role: 'help',
-        // submenu: [
-        //     {
-        //         label: 'Abou Editor Component',
-        //         click: async () => {
-        //             await shell.openExternal('https://simplemde.com');
-        //         }
-        //     }
-        // ]
-
+        label: 'File',
+        submenu: [
+            {
+                label: 'Open',
+                accelerator: 'CmdOrCtrl+O',
+                click: () => {
+                    loadFile();
+                }
+            },
+            {
+                label: 'Save',
+                accelerator: 'CmdOrCtrl+S',
+                click: () => {
+                    saveFile();
+                }
+            }
+        ]
+    },
+    {
         label: 'Format',
         submenu: [
             {
@@ -73,38 +115,14 @@ ipcMain.on('editor-reply', (event, arg) => {
     console.log(`Received reply from web page: ${arg}`);
 });
 
+
 app.on('ready', () => {
     globalShortcut.register('CommandOrControl+S', () => {
-        console.log('Saving the file');
-        const window = BrowserWindow.getFocusedWindow();
-        window.webContents.send('editor-event', 'save');
+        saveFile();
     });
 
     globalShortcut.register('CommandOrControl+O', () => {
-        const window = BrowserWindow.getFocusedWindow();
-        // window.webContents.send('editor-event', 'toggle-bold');
-        const options = {
-            title: 'Pick a markdown file',
-            filters: [
-                {
-                    name: 'Markdown files',
-                    extensions: ['md']
-                },
-                {
-                    name: 'Text files',
-                    extensions: ['txt']
-                }
-            ]
-        };
-
-        dialog.showOpenDialog(window, options).then((file) => {      
-            if (file && file.filePaths.length > 0) {
-                filename = file.filePaths[0];
-                const content = fs.readFileSync(filename).toString();
-                window.webContents.send('load', content);
-
-            }
-        });
+        loadFile();
     });
 });
 
