@@ -1,6 +1,6 @@
 {
   "name": "markdown-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build a Markdown editor with Electron",
   "main": "index.js",
   "scripts": {
@@ -23,10 +23,24 @@
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron-forge/publisher-github": "^7.5.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^33.2.0"
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
   },
   "dependencies": {
+    "electron-log": "^5.2.2",
+    "electron-updater": "^6.3.9",
     "simplemde": "^1.11.2",
     "update-electron-app": "^3.0.0"
+  },
+  "build": {
+    "appId": "com.dungho.markdown-editor",
+    "productName": "Markdown Editor",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "dudaka",
+        "repo": "markdown-editor"
+      }
+    ]
   }
 }

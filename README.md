@@ -82,10 +82,13 @@ Customized the Electron Menu module to include relevant menu items.
 
 ### Automatic Updates
 
-- Set up using `electron-updater`.
-- Published releases hosted on GitHub.
+```sh
+# GH_TOKEN
+npx electron-builder
+npx electron-builder --publish=always
+```
 
-## Automatic Updates
+<!-- ## Automatic Updates
 
 ### Generate PAT
 
@@ -100,4 +103,6 @@ Customized the Electron Menu module to include relevant menu items.
 GITHUB_TOKEN=<PAT>
 npm run publish
 
-```
+``` -->
+
+Note: Considering to remove `electron-forge` and replace with `electron-builder`
